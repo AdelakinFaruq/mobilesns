@@ -1,0 +1,655 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Create Account | Mobiletopit</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+
+      background:
+        linear-gradient(135deg,
+          #eef6ff 0%,
+          #f8fbff 50%,
+          #eaf3ff 100%);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 30px 15px;
+    }
+
+    /* =========================
+           MAIN WRAPPER
+        ========================= */
+
+    .register-wrapper {
+      width: 100%;
+      max-width: 1050px;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      background: #ffffff;
+
+      border-radius: 24px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 20px 60px rgba(0, 80, 160, 0.15);
+    }
+
+
+    /* =========================
+           LEFT SIDE
+        ========================= */
+
+    .brand-section {
+      background:
+        linear-gradient(145deg,
+          #0066ff,
+          #0047b3);
+
+      color: white;
+
+      padding: 55px 45px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+
+    .brand-section::before {
+      content: "";
+
+      position: absolute;
+
+      width: 250px;
+      height: 250px;
+
+      border-radius: 50%;
+
+      background: rgba(255, 255, 255, 0.08);
+
+      top: -80px;
+      right: -80px;
+    }
+
+
+    .brand-section::after {
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+      height: 180px;
+
+      border-radius: 50%;
+
+      background: rgba(255, 255, 255, 0.06);
+
+      bottom: -70px;
+      left: -70px;
+    }
+
+
+    .logo {
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      margin-bottom: 35px;
+
+      position: relative;
+      z-index: 2;
+    }
+
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+
+      background: white;
+
+      color: #0066ff;
+
+      border-radius: 14px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+
+    .logo-text {
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+
+    .brand-section h1 {
+      font-size: 40px;
+
+      line-height: 1.2;
+
+      margin-bottom: 20px;
+
+      position: relative;
+      z-index: 2;
+    }
+
+
+    .brand-section p {
+      font-size: 16px;
+
+      line-height: 1.7;
+
+      opacity: 0.9;
+
+      max-width: 420px;
+
+      position: relative;
+      z-index: 2;
+    }
+
+
+    /* FEATURES */
+
+    .features {
+      margin-top: 35px;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 18px;
+
+      position: relative;
+      z-index: 2;
+    }
+
+
+    .feature {
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      font-size: 15px;
+    }
+
+
+    .check {
+      width: 28px;
+      height: 28px;
+
+      background: rgba(255, 255, 255, 0.18);
+
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: bold;
+    }
+
+
+    /* =========================
+           FORM SIDE
+        ========================= */
+
+    .form-section {
+      padding: 50px 45px;
+    }
+
+
+    .form-header {
+      margin-bottom: 30px;
+    }
+
+
+    .form-header h2 {
+      font-size: 30px;
+
+      color: #111827;
+
+      margin-bottom: 8px;
+    }
+
+
+    .form-header p {
+      color: #6b7280;
+
+      font-size: 14px;
+    }
+
+
+    /* =========================
+           FORM
+        ========================= */
+
+    form p {
+      margin-bottom: 18px;
+    }
+
+
+    label {
+      display: block;
+
+      font-size: 14px;
+
+      font-weight: 600;
+
+      color: #374151;
+
+      margin-bottom: 7px;
+    }
+
+
+    input {
+      width: 100%;
+
+      padding: 13px 14px;
+
+      border: 1px solid #d1d5db;
+
+      border-radius: 9px;
+
+      font-size: 15px;
+
+      outline: none;
+
+      background: #fafafa;
+
+      transition: 0.2s;
+    }
+
+
+    input:focus {
+      border-color: #0066ff;
+
+      background: white;
+
+      box-shadow:
+        0 0 0 3px rgba(0, 102, 255, 0.10);
+    }
+
+
+    /* Django help text */
+
+    .helptext {
+      display: block;
+
+      color: #6b7280;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+
+      margin-top: 7px;
+    }
+
+
+    /* Error messages */
+
+    .errorlist {
+      list-style: none;
+
+      color: #dc2626;
+
+      font-size: 13px;
+
+      margin-bottom: 7px;
+    }
+
+
+    /* =========================
+           BUTTON
+        ========================= */
+
+    .register-btn {
+      width: 100%;
+
+      border: none;
+
+      padding: 14px;
+
+      border-radius: 9px;
+
+      background:
+        linear-gradient(135deg,
+          #0066ff,
+          #0052cc);
+
+      color: white;
+
+      font-size: 16px;
+
+      font-weight: 600;
+
+      cursor: pointer;
+
+      margin-top: 5px;
+
+      transition: 0.2s;
+    }
+
+
+    .register-btn:hover {
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 8px 20px rgba(0, 102, 255, 0.25);
+    }
+
+
+    /* =========================
+           LOGIN
+        ========================= */
+
+    .login-link {
+      text-align: center;
+
+      margin-top: 22px;
+
+      font-size: 14px;
+
+      color: #6b7280;
+    }
+
+
+    .login-link a {
+      color: #0066ff;
+
+      text-decoration: none;
+
+      font-weight: 600;
+    }
+
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+
+    /* =========================
+           SECURITY TEXT
+        ========================= */
+
+    .security {
+      margin-top: 25px;
+
+      padding: 12px;
+
+      background: #f0f7ff;
+
+      border-radius: 8px;
+
+      color: #4b5563;
+
+      font-size: 12px;
+
+      text-align: center;
+    }
+
+
+    /* =========================
+           MOBILE
+        ========================= */
+
+    @media (max-width: 800px) {
+
+      .register-wrapper {
+        grid-template-columns: 1fr;
+
+        max-width: 500px;
+      }
+
+
+      .brand-section {
+        padding: 35px 30px;
+      }
+
+
+      .brand-section h1 {
+        font-size: 30px;
+      }
+
+
+      .features {
+        display: none;
+      }
+
+
+      .logo {
+        margin-bottom: 20px;
+      }
+
+
+      .form-section {
+        padding: 35px 30px;
+      }
+
+    }
+
+
+    @media (max-width: 450px) {
+
+      body {
+        padding: 15px;
+      }
+
+
+      .register-wrapper {
+        border-radius: 16px;
+      }
+
+
+      .brand-section {
+        padding: 30px 22px;
+      }
+
+
+      .form-section {
+        padding: 30px 22px;
+      }
+
+
+      .brand-section h1 {
+        font-size: 26px;
+      }
+
+
+      .form-header h2 {
+        font-size: 25px;
+      }
+
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <div class="register-wrapper">
+
+
+    <!-- =========================
+             BRANDING
+        ========================== -->
+
+    <div class="brand-section">
+
+      <div class="logo">
+
+        <div class="logo-icon">
+          M
+        </div>
+
+        <div class="logo-text">
+          Mobiletopit
+        </div>
+
+      </div>
+
+
+      <h1>
+        Power your transactions with ease.
+      </h1>
+
+
+      <p>
+        Create your Mobiletopit account and enjoy
+        a simple and convenient way to manage your
+        airtime transactions.
+      </p>
+
+
+      <div class="features">
+
+        <div class="feature">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Easy and fast transactions
+          </span>
+
+        </div>
+
+
+        <div class="feature">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Keep track of your transactions
+          </span>
+
+        </div>
+
+
+        <div class="feature">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Access your transaction history
+          </span>
+
+        </div>
+
+
+        <div class="feature">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Secure customer account
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+             REGISTRATION FORM
+        ========================== -->
+
+    <div class="form-section">
+
+
+      <div class="form-header">
+
+        <h2>
+          Create your account
+        </h2>
+
+        <p>
+          Register to start using Mobiletopit.
+        </p>
+
+      </div>
+
+
+      <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+
+        <button type="submit" class="register-btn">
+          Create Account
+        </button>
+
+      </form>
+
+
+      <div class="security">
+
+        🔒 Your account information is protected
+        and securely stored.
+
+      </div>
+
+
+      <div class="login-link">
+
+        Already have an account?
+
+        <a href="{% url 'login' %}">
+          Login here
+        </a>
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+</body>
+
+</html>

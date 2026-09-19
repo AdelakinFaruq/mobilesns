@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mobiletopit Airtime Receipt</title>
+
+  <link rel="stylesheet" href="{% static 'image/receipt.css' %}">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+  <div class="receipt-container">
+
+    <div class="receipt-header">
+      <h2>Mobiletopit Airtime Receipt</h2>
+      <p>Transaction Confirmation</p>
+    </div>
+
+
+    <div class="receipt-section">
+      <h3>Network Details</h3>
+
+      <p>
+        <strong>Network:</strong>
+        <span>{{ transaction.network }}</span>
+      </p>
+    </div>
+
+
+    <div class="receipt-section">
+      <h3>Customer Info</h3>
+
+      <p>
+        <strong>Name:</strong>
+        <span>{{ transaction.name }}</span>
+      </p>
+
+      <p>
+        <strong>Sender Phone:</strong>
+        <span>{{ transaction.phone }}</span>
+      </p>
+
+      <p>
+        <strong>Account:</strong>
+        <span>{{ transaction.account }}</span>
+      </p>
+    </div>
+
+
+    <div class="receipt-section">
+      <h3>Transaction</h3>
+
+      <p>
+        <strong>Airtime Amount:</strong>
+        <span class="amount">
+          ₦{{ transaction.amount }}
+        </span>
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+        <span class="success">SUCCESSFUL</span>
+      </p>
+
+      <p>
+        <strong>Date:</strong>
+        <span>
+          {{ transaction.date|date:"d/m/Y, h:i:s A" }}
+        </span>
+      </p>
+    </div>
+
+
+    <div class="receipt-footer">
+
+      <p>
+        Thank you for using Mobiletopit Airtime Platform
+      </p>
+
+      <div class="receipt-buttons">
+
+        <button onclick="downloadReceipt()">
+          Download
+        </button>
+
+        <button onclick="shareReceipt()">
+          Share
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    // ==========================================
+    // DOWNLOAD RECEIPT
+    // ==========================================
+
+    function downloadReceipt() {
+
+      const receipt = document.querySelector('.receipt-container');
+
+      html2canvas(receipt).then(canvas => {
+
+        const link = document.createElement('a');
+
+        link.download = `receipt_{{ transaction.id }}.png`;
+
+        link.href = canvas.toDataURL('image/png');
+
+        link.click();
+
+      });
+
+    }
+
+
+    // ==========================================
+    // SHARE RECEIPT
+    // ==========================================
+
+    async function shareReceipt() {
+
+      const receipt = document.querySelector('.receipt-container');
+
+      try {
+
+        const canvas = await html2canvas(receipt);
+
+        canvas.toBlob(async (blob) => {
+
+          const file = new File(
+            [blob],
+            `receipt_{{ transaction.id }}.png`,
+            {
+              type: 'image/png'
+            }
+          );
+
+
+          // Mobile Web Share API
+          if (
+            navigator.canShare &&
+            navigator.canShare({ files: [file] })
+          ) {
+
+            try {
+
+              await navigator.share({
+                files: [file],
+                title: 'Airtime Receipt',
+                text: 'Here is your Mobiletopit Airtime Receipt'
+              });
+
+              return;
+
+            } catch (error) {
+
+              console.log(
+                "Sharing cancelled or failed:",
+                error
+              );
+
+            }
+
+          }
+
+
+          // ======================================
+          // FALLBACK
+          // ======================================
+
+          const url = URL.createObjectURL(blob);
+
+          const message = encodeURIComponent(
+            "Here is my Mobiletopit Airtime Receipt"
+          );
+
+
+          const whatsappUrl =
+            `https://wa.me/?text=${message}`;
+
+
+          const emailUrl =
+            `mailto:?subject=Airtime Receipt&body=${message}`;
+
+
+          const choice = prompt(
+            "Sharing options:\n\n" +
+            "1 = WhatsApp\n" +
+            "2 = Email\n\n" +
+            "Enter 1 or 2"
+          );
+
+
+          if (choice === "1") {
+
+            window.open(
+              whatsappUrl,
+              "_blank"
+            );
+
+          }
+
+          else if (choice === "2") {
+
+            window.open(
+              emailUrl,
+              "_blank"
+            );
+
+          }
+
+          else {
+
+            alert(
+              "Invalid option."
+            );
+
+          }
+
+        });
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Could not create receipt:",
+          error
+        );
+
+        alert(
+          "Unable to create receipt."
+        );
+
+      }
+
+    }
+
+  </script>
+
+</body>
+
+</html>

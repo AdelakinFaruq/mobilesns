@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOBILETOPIT</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+  <div class="menu">
+    <ul>
+      <li><a href="#about-section">ABOUT</a></li>
+      <li><a href="#network-section">NETWORKS</a></li>
+      <li><a href="#contact">CONTACT</a></li>
+    </ul>
+  </div>
+
+  <section class="hero">
+    <p class="title">WELCOME TO MOBILETOPIT</p>
+    <p class="subtitle">(Share & Sell Airtime Platform)</p>
+    <p class="deal">Convert your excess airtime to cash — we pay swiftly</p>
+  </section>
+
+  <div class="network">
+    <div class="logo-box">
+      <img src="{% static 'image/download__1_-removebg-preview (3).png' %}" alt="MTN">
+      <span class="mtn">MTN</span>
+    </div>
+
+    <div class="logo-box">
+      <img src="{% static 'image/download__3_-removebg-preview (1).png' %}" alt="Airtel">
+      <span class="airtel">Airtel</span>
+    </div>
+
+    <div class="logo-box">
+      <img src="{% static 'image/download__4_-removebg-preview.png.png' %}" alt="Glo">
+      <span class="glo">Glo</span>
+    </div>
+  </div>
+
+  <div class="box">
+
+    <div class="number">
+      <span>MTN NUMBER [09033966394]</span>
+      <span>AIRTEL NUMBER [09029192282]</span>
+      <span>GLO NUMBER [08154293313]</span>
+    </div>
+
+    <h3 class="text">Choose the network you want to sell airtime to</h3>
+
+    <form id="receiptForm" method="POST" action="{% url 'index' %}">
+      {% csrf_token %}
+
+      <select name="network" id="ntw" required>
+        <option value="">LIST OF NETWORKS</option>
+        <option value="MTN [RATE 80%]">MTN [RATE 80%]</option>
+        <option value="AIRTEL [RATE 80%]">AIRTEL [RATE 80%]</option>
+        <option value="GLO [RATE 75%]">GLO [RATE 75%]</option>
+      </select>
+
+      <input type="text" name="name" id="name" placeholder="Customer Name" required>
+
+      <input type="tel" name="phone" id="phone" placeholder="Sender Phone Number" required>
+
+      <input type="number" name="amount" id="amount" placeholder="Amount of Airtime Sent" required>
+
+      <input type="text" name="account" id="account" placeholder="Customer Full Account details" required>
+
+      <button type="submit" class="proceed-btn">
+        Click Here To Proceed
+      </button>
+    </form>
+  </div>
+
+  <!-- PROFESSIONAL DASHBOARD NAVIGATION -->
+  <nav class="dashboard-nav">
+
+    <a href="{% url 'index' %}" class="dashboard-nav-link active">
+      <span class="nav-icon">⌂</span>
+      <span>Home</span>
+    </a>
+
+    <a href="{% url 'transaction_history' %}" class="dashboard-nav-link">
+      <span class="nav-icon">☷</span>
+      <span>My Transactions</span>
+    </a>
+
+  </nav>
+
+  <section id="about-section">
+    <h2>About Our Platform</h2>
+    <p class="about-text">
+      Our airtime platform provides fast, secure, and reliable airtime transfers
+      to all networks. We are committed to making airtime transactions simple,
+      convenient, and accessible anytime.
+    </p>
+
+    <div class="about-features">
+      <div class="feature">⚡ Instant Airtime</div>
+      <div class="feature">🔒 Secure Transactions</div>
+      <div class="feature">📱 All Networks Supported</div>
+      <div class="feature">⏱ 24/7 Availability</div>
+    </div>
+  </section>
+  <section id="network-section">
+    <h2>SELECT NETWORK</h2>
+
+    <div class="network-grid">
+
+      <!-- MTN -->
+      <div class="network-card mtn">
+        <h3>MTN Airtime Transfer</h3>
+        <ol>
+          <li>Dial <b>*321#</b> on the sender’s MTN line</li>
+          <li>Select <b>Airtime Share / Gift</b></li>
+          <li>Choose <b>Share Airtime</b></li>
+          <li>Enter the receiver’s MTN number [09033966394]</li>
+          <li>Enter the amount to transfer</li>
+          <li>Input your MTN transfer PIN</li>
+          <li>Confirm the transaction</li>
+        </ol>
+      </div>
+
+      <!-- Airtel -->
+      <div class="network-card airtel">
+        <h3>Airtel Airtime Transfer</h3>
+        <ol>
+          <li>Dial <b>*321#</b> on the sender’s Airtel line</li>
+          <li>Select <b>Transfer Airtime</b></li>
+          <li>Enter the receiver’s Airtel number [09029192282]</li>
+          <li>Enter the amount [20,000 MAX]</li>
+          <li>Input your Airtel transfer PIN</li>
+          <li>Confirm the transfer</li>
+        </ol>
+      </div>
+
+      <!-- Glo -->
+      <div class="network-card glo">
+        <h3>Glo Airtime Transfer</h3>
+        <ol>
+          <li>Dial <b>*321#</b> on the sender’s Glo line</li>
+          <li>Select <b>Airtime Transfer</b></li>
+          <li>Enter the receiver’s Glo number [08154293313]</li>
+          <li>Enter the amount</li>
+          <li>Input your Glo transfer PIN</li>
+          <li>Confirm the transaction</li>
+        </ol>
+      </div>
+
+    </div>
+    <br>
+    <br>
+    <p class="network-note">
+      ⚠️ Transfers only work within the same network. Ensure sufficient balance.
+    </p>
+
+  </section>
+  <br>
+  <br>
+  <div class="about">
+    <label for="contact"><b>OUR CONTACT</b></label>
+
+    <select id="contact">
+      <option value="">-- Select Contact --</option>
+      <option value="whatsapp">WhatsApp</option>
+      <option value="facebook">Facebook</option>
+    </select>
+
+  </div>
+  <br>
+  <section id="contact" class="contact-section">
+    <h2>Contact Us</h2>
+    <p>We will be glad to hear from you! Reach out using any of the methods above or send us a message directly.</p>
+
+    <div class="contact-container">
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <div class="info-box">
+          <h3>📞 Phone</h3>
+          <p>+234 902 919 2282</p>
+        </div>
+        <div class="info-box">
+          <h3>✉️ Email</h3>
+          <p>support@mobiletopit76.com</p>
+        </div>
+        <div class="info-box">
+          <h3>📍 Address</h3>
+          <p> Lagos, Nigeria</p>
+        </div>
+        <div class="info-box">
+          <h3>🌐 Social Media</h3>
+          <p>
+            <a href="#">Facebook</a> |
+            <a href="#">Twitter</a> |
+            <a href="#">WhatsApp</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <form onsubmit="return false;"> <!-- Prevents any auto-submission loops -->
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="Your Email" required>
+          <textarea placeholder="Your Message" rows="5" required></textarea>
+
+          <!-- CHANGED: type="button" instead of "submit" -->
+          <button type="button">Send Message</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+  <footer class="footer">
+    <p>© 2025 <b>MOBILETOPIT</b> | Developed by <strong>Mobile Dev</strong></p>
+
+    <style>
+      .contact-section {
+        padding: 60px 20px;
+        background-color: #f2f4f8;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      }
+
+      .contact-section h2 {
+        font-size: 28px;
+        color: #2d7df6;
+      }
+
+      .contact-section p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      .contact-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+      }
+
+      .contact-info {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .info-box {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        text-align: left;
+      }
+
+      .info-box h3 {
+        margin: 0 0 10px;
+        color: #2d7df6;
+      }
+
+      .info-box p,
+      .info-box a {
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .contact-form {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .contact-form form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .contact-form input,
+      .contact-form textarea {
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+      }
+
+      .contact-form button {
+        background-color: #2d7df6;
+        color: #fff;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .contact-form button:hover {
+        background-color: #1b5fc1;
+      }
+
+      /* Responsive */
+      @media(max-width: 768px) {
+        .contact-container {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+</body>
+
+</html>
