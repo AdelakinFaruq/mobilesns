@@ -1,128 +1,491 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Mobiletopit Airtime Receipt</title>
+  <title>MOBILETOPIT Receipt</title>
 
-  <link rel="stylesheet" href="{% static 'image/receipt.css' %}">
-
+  <!-- PDF LIBRARIES -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+    }
+
+    .receipt-wrapper {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .receipt {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .receipt-header {
+      text-align: center;
+      border-bottom: 2px solid #2d7df6;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .receipt-header h1 {
+      margin: 0;
+      color: #2d7df6;
+      font-size: 28px;
+    }
+
+    .receipt-header p {
+      margin: 8px 0 0;
+      color: #666;
+    }
+
+    .success {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .receipt-row span:first-child {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .receipt-row span:last-child {
+      text-align: right;
+      color: #111;
+      word-break: break-word;
+    }
+
+    .amount {
+      font-size: 22px;
+      color: #2d7df6 !important;
+      font-weight: bold;
+    }
+
+    .transaction-id {
+      text-align: center;
+      margin-top: 20px;
+      color: #555;
+    }
+
+    .buttons {
+      margin-top: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .buttons button,
+    .back-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .download-btn {
+      background: #2d7df6;
+      color: white;
+    }
+
+    .share-btn {
+      background: #25d366;
+      color: white;
+    }
+
+    .print-btn {
+      background: #555;
+      color: white;
+    }
+
+    .back-btn {
+      display: block;
+      margin-top: 12px;
+      background: #111;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    @media print {
+
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .buttons,
+      .back-btn {
+        display: none;
+      }
+
+      .receipt {
+        box-shadow: none;
+      }
+
+    }
+  </style>
+
 </head>
+
 
 <body>
 
-  <div class="receipt-container">
 
-    <div class="receipt-header">
-      <h2>Mobiletopit Airtime Receipt</h2>
-      <p>Transaction Confirmation</p>
-    </div>
+  <div class="receipt-wrapper">
 
 
-    <div class="receipt-section">
-      <h3>Network Details</h3>
+    <!-- RECEIPT TO DOWNLOAD -->
 
-      <p>
-        <strong>Network:</strong>
-        <span>{{ transaction.network }}</span>
-      </p>
-    </div>
+    <div class="receipt" id="receipt">
 
 
-    <div class="receipt-section">
-      <h3>Customer Info</h3>
+      <div class="receipt-header">
 
-      <p>
-        <strong>Name:</strong>
-        <span>{{ transaction.name }}</span>
-      </p>
+        <h1>
+          MOBILETOPIT
+        </h1>
 
-      <p>
-        <strong>Sender Phone:</strong>
-        <span>{{ transaction.phone }}</span>
-      </p>
-
-      <p>
-        <strong>Account:</strong>
-        <span>{{ transaction.account }}</span>
-      </p>
-    </div>
-
-
-    <div class="receipt-section">
-      <h3>Transaction</h3>
-
-      <p>
-        <strong>Airtime Amount:</strong>
-        <span class="amount">
-          ₦{{ transaction.amount }}
-        </span>
-      </p>
-
-      <p>
-        <strong>Status:</strong>
-        <span class="success">SUCCESSFUL</span>
-      </p>
-
-      <p>
-        <strong>Date:</strong>
-        <span>
-          {{ transaction.date|date:"d/m/Y, h:i:s A" }}
-        </span>
-      </p>
-    </div>
-
-
-    <div class="receipt-footer">
-
-      <p>
-        Thank you for using Mobiletopit Airtime Platform
-      </p>
-
-      <div class="receipt-buttons">
-
-        <button onclick="downloadReceipt()">
-          Download
-        </button>
-
-        <button onclick="shareReceipt()">
-          Share
-        </button>
+        <p>
+          Airtime Transaction Receipt
+        </p>
 
       </div>
 
+
+      <div class="success">
+
+        ✓ TRANSACTION SUBMITTED SUCCESSFULLY
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Transaction ID
+        </span>
+
+        <span>
+          #MT{{ transaction.id }}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Network
+        </span>
+
+        <span>
+          {{ transaction.network }}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Customer Name
+        </span>
+
+        <span>
+          {{ transaction.name }}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Phone Number
+        </span>
+
+        <span>
+          {{ transaction.phone }}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Amount
+        </span>
+
+        <span class="amount">
+          ₦{{ transaction.amount }}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Account Details
+        </span>
+
+        <span>
+          {{ transaction.account }}
+        </span>
+
+      </div>
+
+
+      <div class="receipt-row">
+
+        <span>
+          Date
+        </span>
+
+        <span>
+          {{ transaction.date|date:"d M Y, h:i A" }}
+        </span>
+
+      </div>
+
+
+      <div class="transaction-id">
+
+        Thank you for using MOBILETOPIT.
+
+      </div>
+
+
     </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+      <button type="button" class="download-btn" onclick="downloadReceipt()">
+
+        📥 Download Receipt PDF
+
+      </button>
+
+
+      <button type="button" class="share-btn" onclick="shareReceipt()">
+
+        📤 Share Receipt
+
+      </button>
+
+
+      <button type="button" class="print-btn" onclick="window.print()">
+
+        🖨️ Print Receipt
+
+      </button>
+
+    </div>
+
+
+    <a href="{% url 'index' %}" class="back-btn">
+
+      ← Back to Dashboard
+
+    </a>
+
 
   </div>
 
 
   <script>
 
+
     // ==========================================
-    // DOWNLOAD RECEIPT
+    // DOWNLOAD RECEIPT AS PDF
     // ==========================================
 
-    function downloadReceipt() {
+    async function downloadReceipt() {
 
-      const receipt = document.querySelector('.receipt-container');
+      const receipt =
+        document.getElementById("receipt");
 
-      html2canvas(receipt).then(canvas => {
+      const button =
+        document.querySelector(".download-btn");
 
-        const link = document.createElement('a');
 
-        link.download = `receipt_{{ transaction.id }}.png`;
+      button.innerText =
+        "Creating PDF...";
 
-        link.href = canvas.toDataURL('image/png');
+      button.disabled = true;
 
-        link.click();
 
-      });
+      try {
+
+        if (!window.html2canvas) {
+
+          throw new Error(
+            "html2canvas library not loaded"
+          );
+
+        }
+
+
+        if (!window.jspdf) {
+
+          throw new Error(
+            "jsPDF library not loaded"
+          );
+
+        }
+
+
+        const canvas =
+          await html2canvas(
+            receipt,
+            {
+              scale: 2,
+              backgroundColor: "#ffffff"
+            }
+          );
+
+
+        const imageData =
+          canvas.toDataURL("image/png");
+
+
+        const { jsPDF } =
+          window.jspdf;
+
+
+        const pdf =
+          new jsPDF(
+            "p",
+            "mm",
+            "a4"
+          );
+
+
+        const pageWidth =
+          pdf.internal.pageSize.getWidth();
+
+
+        const pageHeight =
+          pdf.internal.pageSize.getHeight();
+
+
+        const margin = 15;
+
+
+        const pdfWidth =
+          pageWidth - (margin * 2);
+
+
+        const imageHeight =
+          (canvas.height * pdfWidth) /
+          canvas.width;
+
+
+        let finalHeight =
+          imageHeight;
+
+
+        if (
+          finalHeight >
+          pageHeight - 30
+        ) {
+
+          finalHeight =
+            pageHeight - 30;
+
+        }
+
+
+        pdf.addImage(
+          imageData,
+          "PNG",
+          margin,
+          15,
+          pdfWidth,
+          finalHeight
+        );
+
+
+        const transactionId =
+          "{{ transaction.id }}";
+
+
+        pdf.save(
+          "MOBILETOPIT-Receipt-" +
+          transactionId +
+          ".pdf"
+        );
+
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "PDF ERROR:",
+          error
+        );
+
+
+        alert(
+          "Unable to create PDF. Please check your internet connection and try again."
+        );
+
+      }
+
+
+      finally {
+
+        button.innerText =
+          "📥 Download Receipt PDF";
+
+        button.disabled = false;
+
+      }
 
     }
+
 
 
     // ==========================================
@@ -131,125 +494,115 @@
 
     async function shareReceipt() {
 
-      const receipt = document.querySelector('.receipt-container');
+      const transactionId =
+        "{{ transaction.id }}";
+
+
+      const network =
+        "{{ transaction.network|escapejs }}";
+
+
+      const amount =
+        "{{ transaction.amount }}";
+
+
+      const customerName =
+        "{{ transaction.name|escapejs }}";
+
+
+      const shareText =
+
+        "MOBILETOPIT TRANSACTION RECEIPT\n\n" +
+
+        "Transaction ID: MT" +
+        transactionId +
+        "\n" +
+
+        "Customer: " +
+        customerName +
+        "\n" +
+
+        "Network: " +
+        network +
+        "\n" +
+
+        "Amount: ₦" +
+        amount +
+        "\n\n" +
+
+        "Thank you for using MOBILETOPIT.";
+
+
+      // Modern browsers
+
+      if (navigator.share) {
+
+        try {
+
+          await navigator.share({
+
+            title:
+              "MOBILETOPIT Receipt",
+
+            text:
+              shareText,
+
+            url:
+              window.location.href
+
+          });
+
+        }
+
+        catch (error) {
+
+          console.log(
+            "Share cancelled."
+          );
+
+        }
+
+        return;
+
+      }
+
+
+      // Fallback
 
       try {
 
-        const canvas = await html2canvas(receipt);
+        await navigator.clipboard.writeText(
 
-        canvas.toBlob(async (blob) => {
+          shareText +
 
-          const file = new File(
-            [blob],
-            `receipt_{{ transaction.id }}.png`,
-            {
-              type: 'image/png'
-            }
-          );
+          "\n\nReceipt: " +
+
+          window.location.href
+
+        );
 
 
-          // Mobile Web Share API
-          if (
-            navigator.canShare &&
-            navigator.canShare({ files: [file] })
-          ) {
-
-            try {
-
-              await navigator.share({
-                files: [file],
-                title: 'Airtime Receipt',
-                text: 'Here is your Mobiletopit Airtime Receipt'
-              });
-
-              return;
-
-            } catch (error) {
-
-              console.log(
-                "Sharing cancelled or failed:",
-                error
-              );
-
-            }
-
-          }
-
-
-          // ======================================
-          // FALLBACK
-          // ======================================
-
-          const url = URL.createObjectURL(blob);
-
-          const message = encodeURIComponent(
-            "Here is my Mobiletopit Airtime Receipt"
-          );
-
-
-          const whatsappUrl =
-            `https://wa.me/?text=${message}`;
-
-
-          const emailUrl =
-            `mailto:?subject=Airtime Receipt&body=${message}`;
-
-
-          const choice = prompt(
-            "Sharing options:\n\n" +
-            "1 = WhatsApp\n" +
-            "2 = Email\n\n" +
-            "Enter 1 or 2"
-          );
-
-
-          if (choice === "1") {
-
-            window.open(
-              whatsappUrl,
-              "_blank"
-            );
-
-          }
-
-          else if (choice === "2") {
-
-            window.open(
-              emailUrl,
-              "_blank"
-            );
-
-          }
-
-          else {
-
-            alert(
-              "Invalid option."
-            );
-
-          }
-
-        });
+        alert(
+          "Receipt information copied. You can now paste and share it."
+        );
 
       }
 
       catch (error) {
 
-        console.error(
-          "Could not create receipt:",
-          error
-        );
-
         alert(
-          "Unable to create receipt."
+          "Sharing is not supported on this browser."
         );
 
       }
 
     }
 
+
   </script>
 
+
 </body>
+
 
 </html>
